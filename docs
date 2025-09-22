@@ -1,1 +1,449 @@
+# 📖 Guia Completo de Uso - Gerador de Templates de Prompts
 
+## 🎯 Visão Geral
+
+O Gerador de Templates de Prompts é uma ferramenta web projetada para profissionais de comunicação, jornalistas e criadores de conteúdo que precisam produzir textos de alta qualidade de forma eficiente e consistente.
+
+## 🚀 Primeiros Passos
+
+### 1. Acessando a Ferramenta
+
+**Online (Recomendado):**
+- Acesse: `https://seuusuario.github.io/prompt-template-generator`
+- Funciona em qualquer navegador moderno
+- Não requer instalação
+
+**Local:**
+- Baixe o arquivo `index.html`
+- Abra em qualquer navegador
+- Todos os recursos funcionam offline
+
+### 2. Interface Principal
+
+A interface está dividida em duas seções principais:
+
+**🛠️ Painel de Configuração (Esquerda):**
+- Seleção de templates
+- Configuração de parâmetros
+- Upload de arquivos
+- Controles avançados
+
+**📄 Painel de Resultado (Direita):**
+- Texto gerado
+- Botão de cópia
+- Contador de palavras
+- Ferramentas de análise
+
+## 📋 Templates Disponíveis
+
+### 🗞️ Template Jornalístico
+
+**Ideal para:**
+- Matérias corporativas
+- Releases de resultados
+- Análises de mercado
+- Conteúdo factual
+
+**Características:**
+- Linguagem neutra e objetiva
+- Sem adjetivos desnecessários
+- Estrutura clara e lógica
+- Foco em fatos e dados
+
+**Exemplo de Configuração:**
+```
+Tema: "Captação da Cosan com BTG Pactual"
+Contexto: "Situação de elevado endividamento da empresa"
+Parágrafos: 20
+Público: "Investidores"
+```
+
+**Resultado Esperado:**
+Texto estruturado em parágrafos numerados, cada um focando em um aspecto específico da operação, com linguagem técnica precisa e citações relevantes.
+
+### 💼 Template LinkedIn
+
+**Ideal para:**
+- Posts profissionais
+- Conteúdo engajador
+- Análises acessíveis
+- Network building
+
+**Características:**
+- Linguagem acessível
+- Formatação com negritos
+- Call-to-action incluído
+- Otimizado para engajamento
+
+**Exemplo de Configuração:**
+```
+Tema: "Mega-captação de R$ 10 bilhões"
+Contexto: "Acordo entre BTG Pactual e Perfin"
+Parágrafos: 3
+Público: "Público geral"
+```
+
+**Resultado Esperado:**
+Post estruturado com título impactante, desenvolvimento claro e call-to-action, formatado para copy-paste direto no LinkedIn.
+
+### 📊 Template Análise Corporativa
+
+**Ideal para:**
+- Relatórios executivos
+- Due diligence
+- Avaliações estratégicas
+- Recomendações de investimento
+
+**Características:**
+- Estrutura Positivos → Atenções → Recomendações
+- Linguagem técnica
+- Foco em insights acionáveis
+- Base analítica sólida
+
+**Exemplo de Configuração:**
+```
+Tema: "Reestruturação financeira da Cosan"
+Contexto: "Lock-up de 4 anos, preço R$ 5 por ação"
+Parágrafos: 15
+Público: "Executivos"
+```
+
+**Resultado Esperado:**
+Análise estruturada com seções claras, destacando oportunidades, riscos e recomendações específicas.
+
+## ⚙️ Configurações Avançadas
+
+### 📊 Número de Parágrafos
+
+**Como Usar:**
+- Use os botões `+` e `-` para ajustar
+- Mínimo: 1 parágrafo
+- Máximo: 50 parágrafos
+- Recomendado: 15-25 para análises completas
+
+**Dicas:**
+- **1-5 parágrafos**: Posts rápidos, resumos executivos
+- **6-15 parágrafos**: Análises médias, releases
+- **16-30 parágrafos**: Matérias completas, relatórios
+- **30+ parágrafos**: Estudos aprofundados, whitepapers
+
+### 🎯 Contexto Específico
+
+**O que incluir:**
+- Background da situação
+- Dados financeiros relevantes
+- Condições especiais do negócio
+- Cenário de mercado
+
+**Exemplos Eficazes:**
+```
+✅ "Empresa enfrentando dívida de R$ 15 bi, com lock-up de 4 anos"
+✅ "Setor de biocombustíveis em transição, pressão ESG crescente"
+✅ "Contexto de alta da Selic e aperto creditício no mercado"
+
+❌ "Situação complicada da empresa"
+❌ "Mercado difícil"
+❌ "Problemas financeiros"
+```
+
+### 💬 Citações Importantes
+
+**Como usar:**
+- Cole trechos exatos entre aspas
+- Inclua declarações de executivos
+- Adicione dados específicos
+- Referencie fontes oficiais
+
+**Formato Recomendado:**
+```
+"A operação visa reduzir nossa alavancagem de 4,2x para 2,8x", disse o CFO.
+"Esperamos concluir a reestruturação até dezembro de 2025."
+"O preço de R$ 5 por ação representa desconto de 35% ao valor patrimonial."
+```
+
+### 👥 Público-Alvo
+
+**Especialistas do Setor:**
+- Linguagem técnica avançada
+- Referências a métricas específicas
+- Análises quantitativas detalhadas
+- Comparações com peers
+
+**Público Geral:**
+- Linguagem acessível
+- Analogias e explicações simples
+- Foco em impactos práticos
+- Evita jargões técnicos
+
+**Investidores:**
+- Foco em retorno e risco
+- Métricas financeiras claras
+- Comparações de valuation
+- Recomendações de posicionamento
+
+**Executivos:**
+- Insights estratégicos
+- Implicações competitivas
+- Oportunidades de negócio
+- Riscos operacionais
+
+## 🌐 Sistema de Tradução
+
+### 42 Idiomas Disponíveis
+
+**Principais idiomas:**
+- 🇺🇸 English
+- 🇪🇸 Español
+- 🇫🇷 Français
+- 🇩🇪 Deutsch
+- 🇮🇹 Italiano
+- 🇨🇳 中文
+- 🇯🇵 日本語
+- 🇰🇷 한국어
+- 🇷🇺 Русский
+- E mais 33 idiomas!
+
+**Como usar:**
+1. Gere seu texto em português
+2. Clique no botão **🌐 Traduzir**
+3. Selecione o idioma desejado
+4. Aguarde a tradução automática
+
+## 📰 Sistema de Manchetes
+
+### 3 Manchetes + Chamada + Legenda
+
+**Manchetes (100 caracteres cada):**
+- Opção 1: Mais direta e factual
+- Opção 2: Foco no impacto
+- Opção 3: Ângulo estratégico
+
+**Chamada (250 caracteres):**
+- Complementa as manchetes
+- Fornece contexto adicional
+- Inclui dados relevantes
+
+**Legenda da Fonte:**
+- Identifica o protagonista
+- Inclui cargo/função
+- Contexto da declaração
+
+**Contadores em Tempo Real:**
+- ✅ Verde: Dentro do limite
+- 🟡 Amarelo: Próximo do limite
+- 🔴 Vermelho: Excedeu o limite
+
+## 📁 Upload de Arquivos
+
+### Tipos Suportados
+
+**Documentos:**
+- `.pdf` - Relatórios, apresentações
+- `.doc/.docx` - Documentos Word
+- `.txt` - Texto puro
+
+**Imagens:**
+- `.jpg/.png` - Gráficos, screenshots
+- `.gif` - Diagramas animados
+
+### Como Usar
+
+1. **Clique na área de upload**
+2. **Selecione múltiplos arquivos** (Ctrl/Cmd + clique)
+3. **Aguarde o processamento**
+4. **Verifique a lista de arquivos**
+
+### Dicas de Upload
+
+**Para PDFs:**
+- Certifique-se que o texto seja pesquisável
+- Evite PDFs escaneados de baixa qualidade
+- Arquivos até 10MB funcionam melhor
+
+**Para Imagens:**
+- Use alta resolução para gráficos
+- Prefira PNG para charts/tabelas
+- JPG para fotos e screenshots
+
+## 🔄 Processo de Geração
+
+### Passo a Passo
+
+1. **Seleção do Template**
+   - Clique no card do template desejado
+   - Observe a mudança de cor (azul = selecionado)
+
+2. **Configuração dos Parâmetros**
+   - Preencha todos os campos obrigatórios
+   - Ajuste número de parágrafos
+   - Adicione contexto específico
+
+3. **Upload de Referências** (Opcional)
+   - Adicione documentos de apoio
+   - Inclua imagens relevantes
+
+4. **Geração do Texto**
+   - Clique em "Gerar Texto"
+   - Aguarde o processamento (2-10 segundos)
+   - Revise o resultado
+
+5. **Finalização**
+   - Use o botão "Copiar" para clipboard
+   - Faça ajustes manuais se necessário
+   - Salve ou publique o conteúdo
+
+### ⏱️ Tempos de Processamento
+
+- **Template Simples**: 2-3 segundos
+- **Template Complexo**: 5-8 segundos
+- **Com Upload de Arquivos**: 8-15 segundos
+- **Análises Extensas**: 10-20 segundos
+
+## 📋 Boas Práticas
+
+### ✅ Faça
+
+**Planejamento:**
+- Defina o objetivo antes de começar
+- Escolha o template mais adequado
+- Prepare o contexto com antecedência
+
+**Configuração:**
+- Seja específico no tema principal
+- Use contexto detalhado e relevante
+- Selecione o público-alvo correto
+
+**Revisão:**
+- Sempre revise o texto gerado
+- Verifique dados e números
+- Ajuste tom conforme necessário
+
+### ❌ Evite
+
+**Erros Comuns:**
+- Temas muito vagos ou genéricos
+- Contexto insuficiente ou irrelevante
+- Número inadequado de parágrafos
+
+**Problemas de Configuração:**
+- Misturar públicos-alvo diferentes
+- Usar templates inadequados para o objetivo
+- Ignorar a revisão final
+
+## 🛠️ Solução de Problemas
+
+### Problemas Comuns
+
+**"Texto muito genérico"**
+- ✅ **Solução**: Adicione mais contexto específico
+- ✅ **Solução**: Inclua citações e dados exatos
+- ✅ **Solução**: Seja mais específico no tema
+
+**"Linguagem inadequada para o público"**
+- ✅ **Solução**: Verifique seleção de público-alvo
+- ✅ **Solução**: Ajuste o template usado
+- ✅ **Solução**: Revise o contexto fornecido
+
+**"Estrutura não atende necessidades"**
+- ✅ **Solução**: Experimente outro template
+- ✅ **Solução**: Ajuste número de parágrafos
+- ✅ **Solução**: Modifique o contexto específico
+
+### Limitações Conhecidas
+
+**Técnicas:**
+- Máximo de 50 parágrafos por geração
+- Arquivos até 10MB para upload
+- Funciona melhor em navegadores modernos
+
+**De Conteúdo:**
+- Requer revisão humana para precisão
+- Pode necessitar ajustes manuais
+- Não substitui expertise do usuário
+
+## 🎓 Casos de Uso Avançados
+
+### Caso 1: Relatório de Resultados Trimestrais
+
+**Configuração:**
+```
+Template: Jornalístico
+Tema: "Resultados Q3 2025 da Empresa XYZ"
+Contexto: "Receita de R$ 2,1 bi (+15% a.a.), EBITDA de R$ 450 mi (+22% a.a.), endividamento estável"
+Parágrafos: 25
+Público: Investidores
+Citações: "Resultados refletem nossa estratégia de expansão", disse o CEO
+```
+
+**Resultado:** Análise completa dos resultados com contextualização histórica, comparações setoriais e outlook.
+
+### Caso 2: Post LinkedIn sobre Trend do Mercado
+
+**Configuração:**
+```
+Template: LinkedIn
+Tema: "Boom das fintechs brasileiras em 2025"
+Contexto: "Setor captou R$ 8 bi no ano, 40% acima de 2024"
+Parágrafos: 4
+Público: Público geral
+```
+
+**Resultado:** Post engajador com hook forte, desenvolvimento claro e call-to-action para comentários.
+
+### Caso 3: Due Diligence de Aquisição
+
+**Configuração:**
+```
+Template: Análise
+Tema: "Avaliação estratégica da Empresa ABC para aquisição"
+Contexto: "Líder em logística, receita R$ 800 mi, múltiplo 12x EBITDA"
+Parágrafos: 20
+Público: Executivos
+```
+
+**Resultado:** Análise estruturada com seções de aspectos positivos, pontos de atenção e recomendações específicas.
+
+## 📈 Métricas de Qualidade
+
+### Como Avaliar Resultados
+
+**Critérios de Qualidade:**
+- ✅ **Relevância**: Conteúdo alinhado com o tema
+- ✅ **Clareza**: Linguagem adequada ao público
+- ✅ **Estrutura**: Organização lógica das informações
+- ✅ **Completude**: Cobertura adequada do assunto
+
+**Indicadores de Sucesso:**
+- Tempo de edição pós-geração < 20%
+- Aprovação direta do conteúdo
+- Engajamento acima da média (LinkedIn)
+- Feedback positivo dos stakeholders
+
+## 🔮 Próximos Passos
+
+Após dominar o uso básico:
+
+1. **Explore Templates Customizados**
+2. **Configure Integrações com APIs**
+3. **Use Funcionalidades de Histórico**
+4. **Experimente Exportação Avançada**
+5. **Contribua com Feedback e Sugestões**
+
+---
+
+## 📞 Suporte
+
+**Problemas Técnicos:**
+- Abra um issue no GitHub
+- Descreva o problema detalhadamente
+- Inclua screenshots se relevante
+
+**Sugestões de Melhoria:**
+- Use as Discussions do GitHub
+- Compartilhe casos de uso específicos
+- Proponha novos templates
+
+**Documentação:**
+- Consulte o README.md para informações técnicas
+- Veja examples/ para casos práticos
+- Acesse docs/ para guias específicos
