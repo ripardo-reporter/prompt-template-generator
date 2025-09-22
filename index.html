@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Templates de Prompts Jornalísticos</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 80vh;
+        }
+
+        .input-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .output-section {
+            padding: 30px;
+            background: white;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .template-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .template-card {
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .template-card:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .template-card.selected {
+            border-color: #3498db;
+            background: #e3f2fd;
+        }
+
+        .template-card h3 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .template-card p {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 15px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            border-color: #3498db;
+            background: #e3f2fd;
+        }
+
+        .file-list {
+            margin-top: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #e8f5e8;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+        }
+
+        .generate-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .output-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 400px;
+            position: relative;
+            border: 1px solid #e9ecef;
+        }
+
+        .output-toolbar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .toolbar-btn {
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .toolbar-btn:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1565c0;
+        }
+
+        .toolbar-btn.active {
+            background: #2196f3;
+            color: white;
+            border-color: #2196f3;
+        }
+
+        .copy-btn {
+            padding: 8px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .output-text {
+            line-height: 1.8;
+            color: #2c3e50;
+            font-size: 15px;
+            white-space: pre-wrap;
+        }
+
+        .word-count {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: #34495e;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+        }
+
+        .placeholder {
+            color: #7f8c8d;
+            font-style: italic;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+            color: #3498db;
+        }
+
+        .loading i {
+            font-size: 2em;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .paragraph-counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .counter-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .counter-btn:hover {
+            background: #2980b9;
+        }
+
+        .counter-display {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        /* Translation Panel Styles */
+        .translation-panel,
+        .headlines-panel {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #90caf9;
+        }
+
+        .panel-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid #e3f2fd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .language-option:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .language-option.selected {
+            background: #2196f3;
+            color: white;
+            border-color: #2196f3;
+        }
+
+        .language-option .flag {
+            font-size: 1.2em;
+        }
+
+        /* Headlines Panel Styles */
+        .headline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .headline-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bbdefb;
+        }
+
+        .headline-item label {
+            display: block;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 8px;
+        }
+
+        .headline-item textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: none;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.4;
+            min-height: 50px;
+        }
+
+        .headline-item textarea:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+        }
+
+        .counter-info {
+            margin-top: 5px;
+            font-size: 0.8em;
+            color: #666;
+            text-align: right;
+        }
+
+        .generate-headlines-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .generate-headlines-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-section {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .template-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-edit"></i> Gerador de Templates de Prompts</h1>
+            <p>Crie textos jornalísticos profissionais com templates personalizados</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    Configuração do Template
+                </h2>
+
+                <div class="form-group">
+                    <label>Selecione o Tipo de Template:</label>
+                    <div class="template-selector">
+                        <div class="template-card" data-template="jornalistico">
+                            <h3><i class="fas fa-newspaper"></i> Jornalístico</h3>
+                            <p>Sem adjetivos, vieses ou clichês</p>
+                        </div>
+                        <div class="template-card" data-template="linkedin">
+                            <h3><i class="fab fa-linkedin"></i> LinkedIn</h3>
+                            <p>Engajador e profissional</p>
+                        </div>
+                        <div class="template-card" data-template="analise">
+                            <h3><i class="fas fa-chart-line"></i> Análise</h3>
+                            <p>Corporativo e estruturado</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Número de Parágrafos:</label>
+                    <div class="paragraph-counter">
+                        <button class="counter-btn" id="decreaseBtn">-</button>
+                        <span class="counter-display" id="paragraphCount">20</span>
+                        <button class="counter-btn" id="increaseBtn">+</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="topic">Tema Principal:</label>
+                    <input type="text" id="topic" placeholder="Ex: Captação da Cosan, Acordo BTG Pactual">
+                </div>
+
+                <div class="form-group">
+                    <label for="context">Contexto Específico:</label>
+                    <textarea id="context" placeholder="Ex: Situação de elevado endividamento, reestruturação financeira..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="quotes">Citações Importantes (opcional):</label>
+                    <textarea id="quotes" placeholder="Cole aqui trechos entre aspas que devem ser incluídos..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="audience">Público-Alvo:</label>
+                    <select id="audience">
+                        <option value="">Selecione...</option>
+                        <option value="especialistas">Especialistas do setor</option>
+                        <option value="geral">Público geral</option>
+                        <option value="investidores">Investidores</option>
+                        <option value="executivos">Executivos</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Arquivos de Referência:</label>
+                    <div class="file-upload">
+                        <input type="file" id="fileInput" multiple accept=".txt,.pdf,.doc,.docx,.jpg,.png">
+                        <label for="fileInput" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <br>Clique para selecionar arquivos
+                            <br><small>PDF, DOC, TXT, Imagens</small>
+                        </label>
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+                </div>
+
+                <button class="generate-btn" id="generateBtn">
+                    <i class="fas fa-magic"></i>
+                    Gerar Texto
+                </button>
+
+                <!-- Translation Panel -->
+                <div class="translation-panel" id="translationPanel" style="display: none;">
+                    <h3 class="panel-title">
+                        <i class="fas fa-language"></i>
+                        Traduzir Texto
+                    </h3>
+                    <div class="language-grid">
+                        <div class="language-option" data-lang="en">
+                            <span class="flag">🇺🇸</span>
+                            <span>English</span>
+                        </div>
+                        <div class="language-option" data-lang="es">
+                            <span class="flag">🇪🇸</span>
+                            <span>Español</span>
+                        </div>
+                        <div class="language-option" data-lang="fr">
+                            <span class="flag">🇫🇷</span>
+                            <span>Français</span>
+                        </div>
+                        <div class="language-option" data-lang="de">
+                            <span class="flag">🇩🇪</span>
+                            <span>Deutsch</span>
+                        </div>
+                        <div class="language-option" data-lang="it">
+                            <span class="flag">🇮🇹</span>
+                            <span>Italiano</span>
+                        </div>
+                        <div class="language-option" data-lang="zh">
+                            <span class="flag">🇨🇳</span>
+                            <span>中文</span>
+                        </div>
+                        <div class="language-option" data-lang="ja">
+                            <span class="flag">🇯🇵</span>
+                            <span>日本語</span>
+                        </div>
+                        <div class="language-option" data-lang="ko">
+                            <span class="flag">🇰🇷</span>
+                            <span>한국어</span>
+                        </div>
+                        <div class="language-option" data-lang="ru">
+                            <span class="flag">🇷🇺</span>
+                            <span>Русский</span>
+                        </div>
+                        <div class="language-option" data-lang="ar">
+                            <span class="flag">🇸🇦</span>
+                            <span>العربية</span>
+                        </div>
+                        <div class="language-option" data-lang="hi">
+                            <span class="flag">🇮🇳</span>
+                            <span>हिन्दी</span>
+                        </div>
+                        <div class="language-option" data-lang="nl">
+                            <span class="flag">🇳🇱</span>
+                            <span>Nederlands</span>
+                        </div>
+                        <div class="language-option" data-lang="sv">
+                            <span class="flag">🇸🇪</span>
+                            <span>Svenska</span>
+                        </div>
+                        <div class="language-option" data-lang="no">
+                            <span class="flag">🇳🇴</span>
+                            <span>Norsk</span>
+                        </div>
+                        <div class="language-option" data-lang="da">
+                            <span class="flag">🇩🇰</span>
+                            <span>Dansk</span>
+                        </div>
+                        <div class="language-option" data-lang="fi">
+                            <span class="flag">🇫🇮</span>
+                            <span>Suomi</span>
+                        </div>
+                        <div class="language-option" data-lang="pl">
+                            <span class="flag">🇵🇱</span>
+                            <span>Polski</span>
+                        </div>
+                        <div class="language-option" data-lang="cs">
+                            <span class="flag">🇨🇿</span>
+                            <span>Čeština</span>
+                        </div>
+                        <div class="language-option" data-lang="hu">
+                            <span class="flag">🇭🇺</span>
+                            <span>Magyar</span>
+                        </div>
+                        <div class="language-option" data-lang="tr">
+                            <span class="flag">🇹🇷</span>
+                            <span>Türkçe</span>
+                        </div>
+                        <div class="language-option" data-lang="he">
+                            <span class="flag">🇮🇱</span>
+                            <span>עברית</span>
+                        </div>
+                        <div class="language-option" data-lang="th">
+                            <span class="flag">🇹🇭</span>
+                            <span>ไทย</span>
+                        </div>
+                        <div class="language-option" data-lang="vi">
+                            <span class="flag">🇻🇳</span>
+                            <span>Tiếng Việt</span>
+                        </div>
+                        <div class="language-option" data-lang="id">
+                            <span class="flag">🇮🇩</span>
+                            <span>Bahasa Indonesia</span>
+                        </div>
+                        <div class="language-option" data-lang="ms">
+                            <span class="flag">🇲🇾</span>
+                            <span>Bahasa Melayu</span>
+                        </div>
+                        <div class="language-option" data-lang="tl">
+                            <span class="flag">🇵🇭</span>
+                            <span>Filipino</span>
+                        </div>
+                        <div class="language-option" data-lang="uk">
+                            <span class="flag">🇺🇦</span>
+                            <span>Українська</span>
+                        </div>
+                        <div class="language-option" data-lang="bg">
+                            <span class="flag">🇧🇬</span>
+                            <span>Български</span>
+                        </div>
+                        <div class="language-option" data-lang="ro">
+                            <span class="flag">🇷🇴</span>
+                            <span>Română</span>
+                        </div>
+                        <div class="language-option" data-lang="hr">
+                            <span class="flag">🇭🇷</span>
+                            <span>Hrvatski</span>
+                        </div>
+                        <div class="language-option" data-lang="sr">
+                            <span class="flag">🇷🇸</span>
+                            <span>Српски</span>
+                        </div>
+                        <div class="language-option" data-lang="sk">
+                            <span class="flag">🇸🇰</span>
+                            <span>Slovenčina</span>
+                        </div>
+                        <div class="language-option" data-lang="sl">
+                            <span class="flag">🇸🇮</span>
+                            <span>Slovenščina</span>
+                        </div>
+                        <div class="language-option" data-lang="et">
+                            <span class="flag">🇪🇪</span>
+                            <span>Eesti</span>
+                        </div>
+                        <div class="language-option" data-lang="lv">
+                            <span class="flag">🇱🇻</span>
+                            <span>Latviešu</span>
+                        </div>
+                        <div class="language-option" data-lang="lt">
+                            <span class="flag">🇱🇹</span>
+                            <span>Lietuvių</span>
+                        </div>
+                        <div class="language-option" data-lang="mt">
+                            <span class="flag">🇲🇹</span>
+                            <span>Malti</span>
+                        </div>
+                        <div class="language-option" data-lang="ga">
+                            <span class="flag">🇮🇪</span>
+                            <span>Gaeilge</span>
+                        </div>
+                        <div class="language-option" data-lang="cy">
+                            <span class="flag">🏴󠁧󠁢󠁷󠁬󠁳󠁿</span>
+                            <span>Cymraeg</span>
+                        </div>
+                        <div class="language-option" data-lang="eu">
+                            <span class="flag">🏴󠁥󠁳󠁰󠁶󠁿</span>
+                            <span>Euskera</span>
+                        </div>
+                        <div class="language-option" data-lang="ca">
+                            <span class="flag">🏴󠁥󠁳󠁣󠁴󠁿</span>
+                            <span>Català</span>
+                        </div>
+                        <div class="language-option" data-lang="gl">
+                            <span class="flag">🏴󠁥󠁳󠁧󠁡󠁿</span>
+                            <span>Galego</span>
+                        </div>
+                        <div class="language-option" data-lang="sw">
+                            <span class="flag">🇰🇪</span>
+                            <span>Kiswahili</span>
+                        </div>
+                        <div class="language-option" data-lang="af">
+                            <span class="flag">🇿🇦</span>
+                            <span>Afrikaans</span>
+                        </div>
+                        <div class="language-option" data-lang="zu">
+                            <span class="flag">🇿🇦</span>
+                            <span>isiZulu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Headlines Panel -->
+                <div class="headlines-panel" id="headlinesPanel" style="display: none;">
+                    <h3 class="panel-title">
+                        <i class="fas fa-heading"></i>
+                        Manchetes Sugeridas
+                    </h3>
+                    <div class="headline-container">
+                        <div class="headline-item">
+                            <label>Manchete 1:</label>
+                            <textarea id="headline1" maxlength="100" placeholder="Primeira opção de manchete..."></textarea>
+                            <div class="counter-info">
+                                <span id="headline1Chars">0</span>/100 caracteres | 
+                                <span id="headline1Words">0</span> palavras
+                            </div>
+                        </div>
+                        <div class="headline-item">
+                            <label>Manchete 2:</label>
+                            <textarea id="headline2" maxlength="100" placeholder="Segunda opção de manchete..."></textarea>
+                            <div class="counter-info">
+                                <span id="headline2Chars">0</span>/100 caracteres | 
+                                <span id="headline2Words">0</span> palavras
+                            </div>
+                        </div>
+                        <div class="headline-item">
+                            <label>Manchete 3:</label>
+                            <textarea id="headline3" maxlength="100" placeholder="Terceira opção de manchete..."></textarea>
+                            <div class="counter-info">
+                                <span id="headline3Chars">0</span>/100 caracteres | 
+                                <span id="headline3Words">0</span> palavras
+                            </div>
+                        </div>
+                        <div class="headline-item">
+                            <label>Chamada (250 caracteres):</label>
+                            <textarea id="callout" maxlength="250" placeholder="Chamada complementar para o texto..."></textarea>
+                            <div class="counter-info">
+                                <span id="calloutChars">0</span>/250 caracteres | 
+                                <span id="calloutWords">0</span> palavras
+                            </div>
+                        </div>
+                        <div class="headline-item">
+                            <label>Legenda da Fonte:</label>
+                            <textarea id="sourceCaption" placeholder="Legenda identificando o sujeito principal como fonte..."></textarea>
+                            <div class="counter-info">
+                                <span id="sourceCaptionChars">0</span> caracteres | 
+                                <span id="sourceCaptionWords">0</span> palavras
+                            </div>
+                        </div>
+                    </div>
+                    <button class="generate-headlines-btn" id="generateHeadlinesBtn">
+                        <i class="fas fa-lightbulb"></i>
+                        Gerar Manchetes
+                    </button>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <h2 class="section-title">
+                    <i class="fas fa-file-alt"></i>
+                    Texto Gerado
+                </h2>
+
+                <div class="output-container">
+                    <div class="output-toolbar">
+                        <button class="toolbar-btn" id="translateBtn" title="Traduzir Texto">
+                            <i class="fas fa-language"></i>
+                        </button>
+                        <button class="toolbar-btn" id="headlinesBtn" title="Gerar Manchetes">
+                            <i class="fas fa-heading"></i>
+                        </button>
+                        <button class="copy-btn" id="copyBtn">
+                            <i class="fas fa-copy"></i>
+                            Copiar
+                        </button>
+                    </div>
+                    
+                    <div class="placeholder" id="placeholder">
+                        <i class="fas fa-edit" style="font-size: 3em; margin-bottom: 20px; color: #bdc3c7;"></i>
+                        <p>Configure o template e clique em "Gerar Texto" para ver o resultado aqui.</p>
+                    </div>
+                    
+                    <div class="loading" id="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>Gerando texto...</p>
+                    </div>
+                    
+                    <div class="output-text" id="outputText" style="display: none;"></div>
+                    <div class="word-count" id="wordCount" style="display: none;">0 palavras</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class PromptTemplateGenerator {
+            constructor() {
+                this.selectedTemplate = '';
+                this.paragraphCount = 20;
+                this.files = [];
+                this.currentLanguage = 'pt';
+                this.originalText = '';
+                this.initializeEventListeners();
+                this.initializeCounters();
+            }
+
+            initializeEventListeners() {
+                // Template selection
+                document.querySelectorAll('.template-card').forEach(card => {
+                    card.addEventListener('click', (e) => this.selectTemplate(e));
+                });
+
+                // Paragraph counter
+                document.getElementById('decreaseBtn').addEventListener('click', () => this.changeParagraphCount(-1));
+                document.getElementById('increaseBtn').addEventListener('click', () => this.changeParagraphCount(1));
+
+                // File upload
+                document.getElementById('fileInput').addEventListener('change', (e) => this.handleFileUpload(e));
+
+                // Generate button
+                document.getElementById('generateBtn').addEventListener('click', () => this.generateText());
+
+                // Copy button
+                document.getElementById('copyBtn').addEventListener('click', () => this.copyToClipboard());
+
+                // Translation panel
+                document.getElementById('translateBtn').addEventListener('click', () => this.toggleTranslationPanel());
+                document.querySelectorAll('.language-option').forEach(option => {
+                    option.addEventListener('click', (e) => this.selectLanguage(e));
+                });
+
+                // Headlines panel
+                document.getElementById('headlinesBtn').addEventListener('click', () => this.toggleHeadlinesPanel());
+                document.getElementById('generateHeadlinesBtn').addEventListener('click', () => this.generateHeadlines());
+            }
+
+            initializeCounters() {
+                // Initialize character and word counters for headlines
+                const textareas = ['headline1', 'headline2', 'headline3', 'callout', 'sourceCaption'];
+                
+                textareas.forEach(id => {
+                    const textarea = document.getElementById(id);
+                    const charsSpan = document.getElementById(id + 'Chars');
+                    const wordsSpan = document.getElementById(id + 'Words');
+                    
+                    if (textarea && charsSpan && wordsSpan) {
+                        textarea.addEventListener('input', () => {
+                            const text = textarea.value;
+                            const chars = text.length;
+                            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+                            
+                            charsSpan.textContent = chars;
+                            wordsSpan.textContent = words;
+                            
+                            // Color coding for character limits
+                            if ((id.includes('headline') && chars > 90) || (id === 'callout' && chars > 225)) {
+                                charsSpan.style.color = '#e74c3c';
+                            } else if ((id.includes('headline') && chars > 80) || (id === 'callout' && chars > 200)) {
+                                charsSpan.style.color = '#f39c12';
+                            } else {
+                                charsSpan.style.color = '#27ae60';
+                            }
+                        });
+                    }
+                });
+            }
+
+            selectTemplate(e) {
+                document.querySelectorAll('.template-card').forEach(card => card.classList.remove('selected'));
+                e.currentTarget.classList.add('selected');
+                this.selectedTemplate = e.currentTarget.dataset.template;
+            }
+
+            changeParagraphCount(delta) {
+                this.paragraphCount = Math.max(1, Math.min(50, this.paragraphCount + delta));
+                document.getElementById('paragraphCount').textContent = this.paragraphCount;
+            }
+
+            handleFileUpload(e) {
+                const files = Array.from(e.target.files);
+                this.files = files;
+                this.updateFileList();
+            }
+
+            updateFileList() {
+                const fileList = document.getElementById('fileList');
+                fileList.innerHTML = '';
+                
+                this.files.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span><i class="fas fa-file"></i> ${file.name}</span>
+                        <button onclick="app.removeFile(${index})" style="background: none; border: none; color: #e74c3c; cursor: pointer;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+            }
+
+            removeFile(index) {
+                this.files.splice(index, 1);
+                this.updateFileList();
+            }
+
+            toggleTranslationPanel() {
+                const panel = document.getElementById('translationPanel');
+                const btn = document.getElementById('translateBtn');
+                
+                if (panel.style.display === 'none' || !panel.style.display) {
+                    panel.style.display = 'block';
+                    btn.classList.add('active');
+                    document.getElementById('headlinesPanel').style.display = 'none';
+                    document.getElementById('headlinesBtn').classList.remove('active');
+                } else {
+                    panel.style.display = 'none';
+                    btn.classList.remove('active');
+                }
+            }
+
+            toggleHeadlinesPanel() {
+                const panel = document.getElementById('headlinesPanel');
+                const btn = document.getElementById('headlinesBtn');
+                
+                if (panel.style.display === 'none' || !panel.style.display) {
+                    panel.style.display = 'block';
+                    btn.classList.add('active');
+                    document.getElementById('translationPanel').style.display = 'none';
+                    document.getElementById('translateBtn').classList.remove('active');
+                } else {
+                    panel.style.display = 'none';
+                    btn.classList.remove('active');
+                }
+            }
+
+            selectLanguage(e) {
+                document.querySelectorAll('.language-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                e.currentTarget.classList.add('selected');
+                const selectedLang = e.currentTarget.dataset.lang;
+                
+                if (this.originalText) {
+                    this.translateText(this.originalText, selectedLang);
+                }
+            }
+
+            async translateText(text, targetLang) {
+                if (!text) return;
+
+                const outputText = document.getElementById('outputText');
+                const loading = document.getElementById('loading');
+                
+                // Show loading
+                outputText.style.display = 'none';
+                loading.style.display = 'block';
+
+                try {
+                    // Simulate translation - in real implementation, use translation API
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    const translatedText = await this.mockTranslate(text, targetLang);
+                    
+                    outputText.textContent = translatedText;
+                    outputText.style.display = 'block';
+                    loading.style.display = 'none';
+                    
+                    // Update word count
+                    const words = translatedText.split(/\s+/).length;
+                    document.getElementById('wordCount').textContent = `${words} palavras (${this.getLanguageName(targetLang)})`;
+                    
+                } catch (error) {
+                    console.error('Translation error:', error);
+                    loading.style.display = 'none';
+                    outputText.style.display = 'block';
+                    alert('Erro na tradução. Tente novamente.');
+                }
+            }
+
+            async mockTranslate(text, targetLang) {
+                // Mock translation for demonstration
+                const translations = {
+                    'en': text.replace(/Cosan/g, 'Cosan').replace(/bilhões/g, 'billion').replace(/acordo/g, 'agreement'),
+                    'es': text.replace(/acordo/g, 'acuerdo').replace(/bilhões/g, 'mil millones'),
+                    'fr': text.replace(/acordo/g, 'accord').replace(/bilhões/g, 'milliards'),
+                    'de': text.replace(/acordo/g, 'Vereinbarung').replace(/bilhões/g, 'Milliarden'),
+                    'it': text.replace(/acordo/g, 'accordo').replace(/bilhões/g, 'miliardi'),
+                    'zh': '科桑公司与BTG Pactual达成100亿雷亚尔融资协议...',
+                    'ja': 'Cosanが BTG Pactualと100億レアルの資金調達契約を締結...',
+                    'ko': 'Cosan이 BTG Pactual과 100억 헤알 자금조달 계약 체결...',
+                    'ru': 'Cosan заключила соглашение с BTG Pactual на 10 миллиардов реалов...'
+                };
+                
+                return translations[targetLang] || `[${targetLang.toUpperCase()}] ${text}`;
+            }
+
+            getLanguageName(code) {
+                const languages = {
+                    'pt': 'Português', 'en': 'English', 'es': 'Español', 'fr': 'Français',
+                    'de': 'Deutsch', 'it': 'Italiano', 'zh': '中文', 'ja': '日本語',
+                    'ko': '한국어', 'ru': 'Русский', 'ar': 'العربية', 'hi': 'हिन्दी',
+                    'nl': 'Nederlands', 'sv': 'Svenska', 'no': 'Norsk', 'da': 'Dansk',
+                    'fi': 'Suomi', 'pl': 'Polski', 'cs': 'Čeština', 'hu': 'Magyar',
+                    'tr': 'Türkçe', 'he': 'עברית', 'th': 'ไทย', 'vi': 'Tiếng Việt',
+                    'id': 'Bahasa Indonesia', 'ms': 'Bahasa Melayu', 'tl': 'Filipino',
+                    'uk': 'Українська', 'bg': 'Български', 'ro': 'Română', 'hr': 'Hrvatski',
+                    'sr': 'Српски', 'sk': 'Slovenčina', 'sl': 'Slovenščina', 'et': 'Eesti',
+                    'lv': 'Latviešu', 'lt': 'Lietuvių', 'mt': 'Malti', 'ga': 'Gaeilge',
+                    'cy': 'Cymraeg', 'eu': 'Euskera', 'ca': 'Català', 'gl': 'Galego',
+                    'sw': 'Kiswahili', 'af': 'Afrikaans', 'zu': 'isiZulu'
+                };
+                
+                return languages[code] || code.toUpperCase();
+            }
+
+            async generateHeadlines() {
+                const topic = document.getElementById('topic').value;
+                const context = document.getElementById('context').value;
+                
+                if (!topic) {
+                    alert('Por favor, informe o tema principal antes de gerar manchetes.');
+                    return;
+                }
+
+                const generateBtn = document.getElementById('generateHeadlinesBtn');
+                generateBtn.disabled = true;
+                generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
+
+                try {
+                    // Simulate API call for headline generation
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    const headlines = this.generateMockHeadlines(topic, context);
+                    
+                    // Fill in the headlines
+                    document.getElementById('headline1').value = headlines.headline1;
+                    document.getElementById('headline2').value = headlines.headline2;
+                    document.getElementById('headline3').value = headlines.headline3;
+                    document.getElementById('callout').value = headlines.callout;
+                    document.getElementById('sourceCaption').value = headlines.sourceCaption;
+                    
+                    // Trigger counter updates
+                    ['headline1', 'headline2', 'headline3', 'callout', 'sourceCaption'].forEach(id => {
+                        const event = new Event('input');
+                        document.getElementById(id).dispatchEvent(event);
+                    });
+                    
+                } catch (error) {
+                    console.error('Error generating headlines:', error);
+                    alert('Erro ao gerar manchetes. Tente novamente.');
+                } finally {
+                    generateBtn.disabled = false;
+                    generateBtn.innerHTML = '<i class="fas fa-lightbulb"></i> Gerar Manchetes';
+                }
+            }
+
+            generateMockHeadlines(topic, context) {
+                // Mock headline generation based on topic and context
+                const topicLower = topic.toLowerCase();
+                
+                if (topicLower.includes('cosan') || topicLower.includes('captação')) {
+                    return {
+                        headline1: "Cosan fecha mega-captação de R$ 10 bi para reduzir dívida",
+                        headline2: "BTG Pactual e Perfin investem R$ 7,25 bi na Cosan",
+                        headline3: "Gigante do etanol capta R$ 10 bilhões em operação histórica",
+                        callout: "Empresa da família Ometto estrutura uma das maiores operações do ano no mercado brasileiro, com participação de grandes fundos e lock-up de 4 anos para estabilizar o controle acionário.",
+                        sourceCaption: "Rubens Ometto Silveira Mello, fundador e controlador da Cosan, durante evento corporativo"
+                    };
+                } else if (topicLower.includes('mercado') || topicLower.includes('economia')) {
+                    return {
+                        headline1: "Mercado brasileiro registra movimento histórico em 2025",
+                        headline2: "Setor financeiro mostra sinais de recuperação consolidada",
+                        headline3: "Investidores apostam em nova fase da economia nacional",
+                        callout: "Análise detalhada dos principais movimentos econômicos que estão moldando o cenário de investimentos no país, com foco em oportunidades estratégicas para o próximo ciclo.",
+                        sourceCaption: "Especialistas do mercado financeiro durante análise setorial"
+                    };
+                } else {
+                    return {
+                        headline1: `${topic}: análise completa do cenário atual`,
+                        headline2: `Mercado reage a desenvolvimentos em ${topic}`,
+                        headline3: `Perspectivas estratégicas para ${topic} em 2025`,
+                        callout: `Estudo aprofundado sobre ${topic}, considerando ${context || 'o contexto atual de mercado'} e suas implicações para investidores e stakeholders do setor.`,
+                        sourceCaption: "Fontes do setor durante entrevista exclusiva"
+                    };
+                }
+            }
+
+            generatePrompt() {
+                const topic = document.getElementById('topic').value;
+                const context = document.getElementById('context').value;
+                const quotes = document.getElementById('quotes').value;
+                const audience = document.getElementById('audience').value;
+
+                if (!this.selectedTemplate || !topic) {
+                    alert('Por favor, selecione um template e informe o tema principal.');
+                    return null;
+                }
+
+                let basePrompt = '';
+
+                switch (this.selectedTemplate) {
+                    case 'jornalistico':
+                        basePrompt = `Escreva ${this.paragraphCount} parágrafos de texto jornalístico sem adjetivos, sem vieses e sem clichês sobre "${topic}".`;
+                        if (quotes) basePrompt += ` Use trechos entre aspas dos seguintes conteúdos: ${quotes}`;
+                        if (context) basePrompt += ` Contextualize com: ${context}`;
+                        break;
+
+                    case 'linkedin':
+                        basePrompt = `Crie uma postagem profissional para LinkedIn sobre "${topic}" em ${this.paragraphCount} parágrafos.`;
+                        if (audience) basePrompt += ` Direcionado para ${audience}.`;
+                        basePrompt += ' Use linguagem acessível e engajadora. Inclua formatação com negritos para facilitar copy-paste.';
+                        if (context) basePrompt += ` Contexto: ${context}`;
+                        break;
+
+                    case 'analise':
+                        basePrompt = `Faça uma análise corporativa estruturada sobre "${topic}" em ${this.paragraphCount} parágrafos.`;
+                        basePrompt += ' Organize em: Aspectos Positivos, Pontos de Atenção e Recomendações.';
+                        if (context) basePrompt += ` Contexto específico: ${context}`;
+                        break;
+                }
+
+                if (audience && this.selectedTemplate !== 'linkedin') {
+                    basePrompt += ` Público-alvo: ${audience}.`;
+                }
+
+                return basePrompt;
+            }
+
+            async generateText() {
+                const prompt = this.generatePrompt();
+                if (!prompt) return;
+
+                const generateBtn = document.getElementById('generateBtn');
+                const placeholder = document.getElementById('placeholder');
+                const loading = document.getElementById('loading');
+                const outputText = document.getElementById('outputText');
+                const wordCount = document.getElementById('wordCount');
+
+                // Show loading state
+                generateBtn.disabled = true;
+                placeholder.style.display = 'none';
+                loading.style.display = 'block';
+                outputText.style.display = 'none';
+                wordCount.style.display = 'none';
+
+                try {
+                    // Simulate API call - replace with actual implementation
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // Generate sample text based on template
+                    const generatedText = this.generateSampleText();
+                    this.originalText = generatedText; // Store for translation
+                    
+                    // Display result
+                    loading.style.display = 'none';
+                    outputText.style.display = 'block';
+                    outputText.textContent = generatedText;
+                    
+                    // Update word count
+                    const words = generatedText.split(/\s+/).length;
+                    wordCount.textContent = `${words} palavras`;
+                    wordCount.style.display = 'block';
+
+                } catch (error) {
+                    console.error('Erro ao gerar texto:', error);
+                    loading.style.display = 'none';
+                    placeholder.style.display = 'block';
+                    alert('Erro ao gerar texto. Tente novamente.');
+                } finally {
+                    generateBtn.disabled = false;
+                }
+            }
+
+            generateSampleText() {
+                const topic = document.getElementById('topic').value;
+                const context = document.getElementById('context').value;
+                
+                let sampleText = '';
+                
+                for (let i = 1; i <= this.paragraphCount; i++) {
+                    if (this.selectedTemplate === 'jornalistico') {
+                        sampleText += `Parágrafo ${i}: Análise jornalística sobre ${topic}. Este texto seria gerado baseado nos parâmetros definidos pelo usuário, mantendo o tom neutro e factual característico do jornalismo corporativo. `;
+                        if (context && i === 2) {
+                            sampleText += `O contexto específico de ${context} influencia diretamente esta análise. `;
+                        }
+                        if (i === 3) {
+                            sampleText += `"Este é um exemplo de citação que seria incluída no texto baseado nas informações fornecidas pelo usuário", segundo fonte oficial. `;
+                        }
+                    } else if (this.selectedTemplate === 'linkedin') {
+                        if (i === 1) {
+                            sampleText += `**${topic}: Uma Análise Estratégica**\n\n`;
+                        }
+                        sampleText += `**Ponto ${i}** sobre ${topic}. Este conteúdo seria otimizado para engajamento no LinkedIn, com linguagem acessível e call-to-actions estratégicos. `;
+                        if (i === this.paragraphCount) {
+                            sampleText += `\n\n**O que vocês acham dessa abordagem? Compartilhem suas experiências nos comentários!**\n\n#${topic.replace(/\s+/g, '')} #Mercado #Análise`;
+                        }
+                    } else if (this.selectedTemplate === 'analise') {
+                        if (i <= Math.floor(this.paragraphCount / 3)) {
+                            sampleText += `**Aspecto Positivo ${i}:** Análise detalhada sobre ${topic} destacando elementos favoráveis identificados na pesquisa. `;
+                        } else if (i <= Math.floor(2 * this.paragraphCount / 3)) {
+                            sampleText += `**Ponto de Atenção ${i - Math.floor(this.paragraphCount / 3)}:** Considerações importantes sobre ${topic} que merecem monitoramento. `;
+                        } else {
+                            sampleText += `**Recomendação ${i - Math.floor(2 * this.paragraphCount / 3)}:** Sugestão estratégica baseada na análise de ${topic}. `;
+                        }
+                    }
+                    sampleText += '\n\n';
+                }
+
+                return sampleText.trim();
+            }
+
+            async copyToClipboard() {
+                const outputText = document.getElementById('outputText');
+                const copyBtn = document.getElementById('copyBtn');
+                
+                // Include headlines if they exist
+                let textToCopy = '';
+                
+                // Check if headlines are filled
+                const headline1 = document.getElementById('headline1').value;
+                const headline2 = document.getElementById('headline2').value;
+                const headline3 = document.getElementById('headline3').value;
+                const callout = document.getElementById('callout').value;
+                const sourceCaption = document.getElementById('sourceCaption').value;
+                
+                if (headline1 || headline2 || headline3) {
+                    textToCopy += '=== MANCHETES ===\n\n';
+                    if (headline1) textToCopy += `Manchete 1: ${headline1}\n`;
+                    if (headline2) textToCopy += `Manchete 2: ${headline2}\n`;
+                    if (headline3) textToCopy += `Manchete 3: ${headline3}\n`;
+                    if (callout) textToCopy += `\nChamada: ${callout}\n`;
+                    if (sourceCaption) textToCopy += `\nLegenda: ${sourceCaption}\n`;
+                    textToCopy += '\n=== TEXTO ===\n\n';
+                }
+                
+                textToCopy += outputText.textContent;
+                
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+                    const originalHTML = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                    copyBtn.style.background = '#27ae60';
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalHTML;
+                        copyBtn.style.background = '#28a745';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Erro ao copiar:', err);
+                    alert('Erro ao copiar texto. Tente selecionar e copiar manualmente.');
+                }
+            }
+        }
+
+        // Initialize the application
+        const app = new PromptTemplateGenerator();
+    </script>
+</body>
+</html>
